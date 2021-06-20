@@ -11,7 +11,7 @@ const Header = (props: any) => {
       title: "History ",
     },
     Login: {
-      title: "Login ",
+      title: "",
     },
   };
   return (

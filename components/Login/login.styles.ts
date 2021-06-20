@@ -1,3 +1,28 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 
-const styles = StyleSheet.create({});
+const { width, height } = Dimensions.get("window");
+
+export const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "black",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: height,
+    width: "100%",
+  },
+  text: {
+    color: "#8A2BE2",
+    fontSize: 25,
+    fontWeight: "700",
+    marginTop: -50,
+    marginBottom: 20,
+  },
+  input: {
+    color: "white",
+    backgroundColor: "rgb(21,21,21)",
+    padding: 15,
+    width: "80%",
+    marginTop: 15,
+  },
+});
