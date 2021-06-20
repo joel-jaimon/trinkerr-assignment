@@ -2,10 +2,15 @@ import { StackActions, useNavigation } from "@react-navigation/native";
 import * as React from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { photoCards } from "../../constants";
+import { AuthContext } from "../../context/Auth";
 import { Swipes } from "../Swipe/Swipes";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Home = () => {
-  const [activity, setActivity] = React.useState<null | string>("Hi Joel");
+  const { authUser } = React.useContext(AuthContext);
+  const [activity, setActivity] = React.useState<null | string>(
+    `Hi ${authUser?.name}`
+  );
   const navigation = useNavigation();
   const pushAction = StackActions.push("History", {});
 

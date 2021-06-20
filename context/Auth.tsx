@@ -8,7 +8,11 @@ export interface AUTHCONTEXTTYPES {
 }
 
 export interface USER {
+  id: string;
   name: string;
+  number: number;
+  selected: any[];
+  rejected: any[];
 }
 
 export const AuthContext = React.createContext({

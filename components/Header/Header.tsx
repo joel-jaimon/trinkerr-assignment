@@ -13,6 +13,9 @@ const Header = (props: any) => {
     Login: {
       title: "",
     },
+    SignUp: {
+      title: "",
+    },
   };
   return (
     <View>
