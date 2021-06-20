@@ -12,7 +12,7 @@ export const AuthorisedStack = (props: any) => {
       <MainStack.Navigator>
         <MainStack.Screen
           name="home"
-          component={HomeScreen}
+          children={HomeScreen}
           options={{
             headerTitle: (props: any) => <Header {...props} />,
             headerStyle: {

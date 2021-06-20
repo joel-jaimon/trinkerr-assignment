@@ -4,16 +4,7 @@ import Home from "../components/Home/Home";
 
 const HomeScreen = () => {
   return (
-    <View
-      style={{
-        height: "100%",
-        width: "100%",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "white",
-      }}
-    >
+    <View>
       <Home />
     </View>
   );
