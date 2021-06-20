@@ -7,9 +7,9 @@ import { NavigationContainer } from "@react-navigation/native";
 import { LoginScreen } from "../screens/LoginScreen";
 import Header from "../components/Header/Header";
 
-const MainStack = createStackNavigator();
+const UnAuthStack = createStackNavigator();
 
-export const AuthorisedStack = () => {
+export const UnAuthorisedStack = () => {
   const headerParam: StackNavigationOptions = {
     headerTitle: (props: any) => <Header {...props} />,
     headerStyle: {
@@ -20,13 +20,13 @@ export const AuthorisedStack = () => {
   };
   return (
     <NavigationContainer>
-      <MainStack.Navigator>
-        <MainStack.Screen
+      <UnAuthStack.Navigator>
+        <UnAuthStack.Screen
           name="Login"
           children={LoginScreen}
           options={headerParam}
         />
-      </MainStack.Navigator>
+      </UnAuthStack.Navigator>
     </NavigationContainer>
   );
 };
