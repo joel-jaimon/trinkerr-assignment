@@ -4,9 +4,8 @@ import {
 } from "@react-navigation/stack";
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
+import { LoginScreen } from "../screens/LoginScreen";
 import Header from "../components/Header/Header";
-import HomeScreen from "../screens/HomeScreen";
-import { HistoryScreen } from "../screens/HistoryScreen";
 
 const MainStack = createStackNavigator();
 
@@ -23,13 +22,8 @@ export const AuthorisedStack = () => {
     <NavigationContainer>
       <MainStack.Navigator>
         <MainStack.Screen
-          name="Home"
-          children={HomeScreen}
-          options={headerParam}
-        />
-        <MainStack.Screen
-          name="History"
-          children={HistoryScreen}
+          name="Login"
+          children={LoginScreen}
           options={headerParam}
         />
       </MainStack.Navigator>

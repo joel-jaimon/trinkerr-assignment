@@ -4,8 +4,14 @@ import { styles as s } from "./headers";
 
 const Header = (props: any) => {
   const headers = {
-    home: {
+    Home: {
       title: "Home ",
+    },
+    History: {
+      title: "History ",
+    },
+    Login: {
+      title: "Login ",
     },
   };
   return (

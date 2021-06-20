@@ -13,10 +13,15 @@ const debounce = (callback: any, wait: number) => {
   };
 };
 
-export const Swipes = ({ items }: any) => {
-  const swiperRef = React.createRef();
-  const [swiping, setSwiping] = React.useState(0);
-  let handleOnSwipedLeft = () => swiperRef.current.swipeLeft();
+export const Swipes = ({ items, setActivity }: any) => {
+  const swiperRef = React.useRef(null);
+  const [swiping, setSwiping] = React.useState(false);
+  const [autoSwipe, setAutoSwipe] = React.useState(true);
+
+  let handleOnSwipedLeft = () => {
+    setAutoSwipe(true);
+    swiperRef.current.swipeLeft();
+  };
 
   React.useEffect(() => {
     let interval = setInterval(handleOnSwipedLeft, 5000);
@@ -32,23 +37,24 @@ export const Swipes = ({ items }: any) => {
   return (
     <View style={styles.swiperContainer}>
       <Swiper
-        //@ts-ignore
         ref={swiperRef}
-        // onSwipedLeft={(e) => {
-        //   console.log("LEFT", items[e]);
-        // }}
-        // onSwipedRight={(e) => {
-        //   console.log("RIGHT", items[e]);
-        // }}
+        onSwipedLeft={(e) => {
+          if (!autoSwipe) {
+            setActivity(`Joel you have rejected ${items[e].name}`);
+          }
+        }}
+        onSwipedRight={(e) => {
+          setActivity(`Joel you have selected ${items[e].name}`);
+        }}
         verticalSwipe={false}
         animateCardOpacity
-        containerStyle={styles.container}
         cards={items}
         renderCard={(card) => (
           <View
             onTouchStart={() => {
               console.log("TOUCHED START");
               setSwiping(true);
+              setAutoSwipe(false);
             }}
             onTouchEnd={() => {
               console.log("TOUCHED END");

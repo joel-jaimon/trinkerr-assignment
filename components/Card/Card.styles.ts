@@ -4,7 +4,8 @@ const { height } = Dimensions.get("window");
 
 export default StyleSheet.create({
   card: {
-    height: height - 300,
+    display: "flex",
+    height: height * 0.55,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "white",
