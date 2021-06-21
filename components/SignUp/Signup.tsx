@@ -38,7 +38,7 @@ export const SignUp = () => {
   };
 
   const handleSignup = async () => {
-    const signup = axios.post("http://localhost:4000/register-user", {
+    const signup = axios.post("http://192.168.1.13:4000/register-user", {
       data: {
         name: name,
         number: parseInt(number),
