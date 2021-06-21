@@ -23,43 +23,109 @@ export const SignUp = () => {
     setState(1);
   }, []);
 
-  const [err, setError] = React.useState<null | string>(null);
+  const [err, setError] = React.useState<any>(null);
   const navigation = useNavigation();
 
-  const handleState1 = (n: string, otp: string) => {
-    setState(0);
-    if (otp === "0000") {
-      setError(null);
-      setState(2);
-      return;
+  const validatorState1 = async (number: string, otp: string) => {
+    if (!number) {
+      setError({
+        type: "number",
+        msg: "Please enter a number.",
+      });
+      return false;
     }
-    setState(1);
-    setError("OTP is Invalid.");
+
+    if (!/^[0-9]*$/.test(number) || number.length < 10) {
+      setError({
+        type: "number",
+        msg: "Please enter a valid number.",
+      });
+      return false;
+    }
+
+    const { data } = await axios.get(
+      `http://192.168.1.13:4000/users/${number}`
+    );
+
+    if (data[0]) {
+      setError({
+        type: "number",
+        msg: "Account already exists! Please login.",
+      });
+      return false;
+    }
+
+    if (!otp) {
+      setError({
+        type: "otp",
+        msg: "Please enter an otp.",
+      });
+      return false;
+    }
+
+    if (!/^[0-9]*$/.test(otp) || otp.length < 4) {
+      setError({
+        type: "otp",
+        msg: "OTP must have four numbers.",
+      });
+      return false;
+    }
+
+    return true;
+  };
+
+  const validatorState2 = (name: string) => {
+    if (/^[a-zA-Z]*$/.test(name) && name.length < 2) return false;
+    return true;
+  };
+
+  const handleState1 = async (n: string, otp: string) => {
+    // setState(0);
+    if (await validatorState1(n, otp)) {
+      if (otp === "0000") {
+        setError(null);
+        setState(2);
+        return;
+      } else {
+        setError({
+          type: "",
+          msg: "OTP is invalid.",
+        });
+        setState(1);
+        return;
+      }
+    }
   };
 
   const handleSignup = async () => {
-    const signup = axios.post("http://192.168.1.13:4000/register-user", {
-      data: {
-        name: name,
-        number: parseInt(number),
-        swiped: [],
-      },
-    });
+    if (validatorState2(name)) {
+      const signup = axios.post("http://192.168.1.13:4000/register-user", {
+        data: {
+          name: name,
+          number: parseInt(number),
+          swiped: [],
+        },
+      });
 
-    const { data } = await signup;
-    console.log(data);
-    setAuthUser({
-      id: data.document._id,
-      name: data.document.name,
-      number: data.document.number,
-      swiped: data.document.swiped,
-    });
-    setIsAuth(true);
+      const { data } = await signup;
+      console.log(data);
+      setAuthUser({
+        id: data.document._id,
+        name: data.document.name,
+        number: data.document.number,
+        swiped: data.document.swiped,
+      });
+      setIsAuth(true);
+    }
   };
 
+  const handleExistingUser = () => {
+    const pushState = StackActions.push("Login");
+    navigation.dispatch(pushState);
+  };
   return (
     <View style={s.container}>
-      <Text style={s.text}>SIGN UP</Text>
+      <Text style={s.text}>SIGN UP </Text>
       {state === 0 ? (
         <ActivityIndicator size="large" color="#8A2BE2" />
       ) : state === 2 ? (
@@ -96,19 +162,37 @@ export const SignUp = () => {
           }}
         >
           <TextInput
-            style={s.input}
+            style={[
+              s.input,
+              {
+                borderBottomColor: err?.type === "number" ? "red" : "black",
+                borderBottomWidth: 2,
+              },
+            ]}
             value={number}
             placeholder={"Number"}
+            keyboardType="number-pad"
             placeholderTextColor="gray"
+            maxLength={10}
             onChangeText={(e) => onChangeNumber(e)}
           />
           <TextInput
-            style={s.input}
+            style={[
+              s.input,
+              {
+                borderBottomColor: err?.type === "otp" ? "red" : "black",
+                borderBottomWidth: 2,
+              },
+            ]}
             value={otp}
             placeholder={"OTP"}
+            keyboardType="number-pad"
             placeholderTextColor="gray"
+            maxLength={4}
             onChangeText={(e) => onChangeOTP(e)}
           />
+          <Text style={s.err}>{err?.msg}</Text>
+
           <TouchableOpacity
             style={s.btn}
             activeOpacity={0.7}
@@ -116,7 +200,15 @@ export const SignUp = () => {
           >
             <Text style={s.textBtn}>Next</Text>
           </TouchableOpacity>
-
+          <Text
+            style={{
+              color: "white",
+              textAlign: "center",
+              marginTop: 25,
+            }}
+          >
+            Or
+          </Text>
           <Text
             style={[
               s.textBtn,
@@ -126,25 +218,29 @@ export const SignUp = () => {
             ]}
           >
             Already have an account?{" "}
-            <TouchableOpacity
-              activeOpacity={0.7}
-              onPress={() => {
-                const pushState = StackActions.push("Login");
-                navigation.dispatch(pushState);
+          </Text>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={{
+              backgroundColor: "#8A2BE2",
+              padding: 10,
+              borderRadius: 5,
+              width: "50%",
+              marginTop: 5,
+            }}
+            onPress={handleExistingUser}
+          >
+            <Text
+              style={{
+                color: "white",
+                textAlign: "center",
               }}
             >
-              <Text
-                style={{
-                  color: "#8A2BE2",
-                }}
-              >
-                Log in.
-              </Text>
-            </TouchableOpacity>
-          </Text>
+              Log In
+            </Text>
+          </TouchableOpacity>
         </View>
       )}
-      <Text style={s.err}>{err}</Text>
     </View>
   );
 };

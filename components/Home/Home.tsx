@@ -21,9 +21,12 @@ const { height } = Dimensions.get("window");
 
 const Home = () => {
   const { authUser } = React.useContext(AuthContext);
-  const [activity, setActivity] = React.useState<null | string>(
-    `Hi ${authUser?.name}`
-  );
+  const [activity, setActivity] = React.useState<null | string>();
+
+  React.useEffect(() => {
+    setActivity(`Hi ${authUser?.name}`);
+  }, [authUser?.name]);
+
   const navigation = useNavigation();
   const pushAction = StackActions.push("History", {});
 
@@ -47,13 +50,13 @@ const Home = () => {
   const handleLeftSwipe = (e: number) => {
     if (!autoSwipe) {
       handleDefaultSwipes(items[e].id, "rejected");
-      setActivity(`Joel you have rejected ${items[e].name}`);
+      setActivity(`${authUser?.name} you have rejected ${items[e].name}`);
     }
   };
 
   const handleRightSwipe = (e: number) => {
     handleDefaultSwipes(items[e].id, "selected");
-    setActivity(`Joel you have selected ${items[e].name}`);
+    setActivity(`${authUser?.name} you have selected ${items[e].name}`);
   };
 
   const autoSwipeLeft = () => {

@@ -22,13 +22,15 @@ export const AuthContext = React.createContext({
 });
 
 export const AuthContextProvider = ({ children }: any) => {
-  const [isAuth, setIsAuth] = React.useState(true);
-  const [authUser, setAuthUser] = React.useState<null | USER>({
-    id: "60d007d00556c9e3e95bcdc3",
-    name: "Joel",
-    number: 9893209958,
-    swiped: [],
-  });
+  const [isAuth, setIsAuth] = React.useState(false);
+  const [authUser, setAuthUser] =
+    React.useState<null | USER>();
+    //   {
+    //   id: "60d007d00556c9e3e95bcdc3",
+    //   name: "Joel",
+    //   number: 9893209958,
+    //   swiped: [],
+    // }
 
   return (
     <AuthContext.Provider

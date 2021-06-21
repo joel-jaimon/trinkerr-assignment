@@ -42,9 +42,9 @@ export const styles = StyleSheet.create({
 
   err: {
     color: "red",
-    position: "absolute",
-    bottom: 50,
-    zIndex: 23,
+    position: "relative",
     textAlign: "center",
+    margin: 20,
+    marginBottom: -10,
   },
 });

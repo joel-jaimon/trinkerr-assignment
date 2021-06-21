@@ -15,12 +15,15 @@ export const History = () => {
   const { authUser } = React.useContext(AuthContext);
 
   React.useEffect(() => {
-    axios
-      .get(`http://192.168.1.13:4000/users/${authUser?.number}`)
-      .then((e) => {
-        setData(e.data[0]);
-        setLoading(false);
-      });
+    (async () => {
+      await axios
+        .get(`http://192.168.1.13:4000/users/${authUser?.number}`)
+        .then((e) => {
+          setData(e.data[0]);
+          setLoading(false);
+        })
+        .catch((e) => console.log(e));
+    })();
   }, []);
 
   //swiper hooks
@@ -54,10 +57,12 @@ export const History = () => {
 
   const swiped = data?.swiped;
 
+  console.log(swiped);
+
   return (
     <View style={s.container}>
       {!loading ? (
-        swiped[0] ? (
+        swiped && swiped?.length != 0 ? (
           <Swipes
             style={{
               height: height,

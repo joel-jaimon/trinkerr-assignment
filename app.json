@@ -1,15 +1,20 @@
 {
   "expo": {
-    "name": "trinkerr_client",
+    "name": "Swipe Em",
     "slug": "trinkerr_client",
     "version": "1.0.0",
     "orientation": "portrait",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
+    "extra": {
+      "SERVER": false,
+      "LOCAL_URL": "http://192.168.1.13:4000",
+      "SERVER_URL": "https://lexa-apps.herokuapp.com"
+    },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false
     },
     "android": {},
     "web": {}

@@ -18,7 +18,7 @@ export const Login = () => {
 
   return (
     <View style={s.container}>
-      <Text style={s.text}>LOGIN</Text>
+      <Text style={s.text}>LOGIN </Text>
       <TextInput
         style={s.input}
         value={name}
