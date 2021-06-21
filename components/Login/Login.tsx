@@ -1,3 +1,4 @@
+import axios from "axios";
 import * as React from "react";
 import { Text, View, TextInput, TouchableOpacity } from "react-native";
 import { AuthContext } from "../../context/Auth";
@@ -7,32 +8,104 @@ export const Login = () => {
   const [name, onChangeName] = React.useState("");
   const [pass, onChangePass] = React.useState("");
   const { setAuthUser, setIsAuth } = React.useContext(AuthContext);
-  const [err, setError] = React.useState<null | string>(null);
+  const [err, setError] = React.useState<any>(null);
 
-  const checkCredentials = () => {};
+  const checkCredentials = async (name: string, num: string) => {
+    await axios.get(`http://192.168.1.13:4000/users/${num}`).then((e) => {
+      try {
+        console.log(e.data);
+        if (e.data[0].name === name) {
+          setAuthUser(e.data[0]);
+          setIsAuth(true);
+        }
+      } catch {
+        setError({
+          type: "",
+          msg: "Invalid Credentials, Please check again.",
+        });
+        return false;
+      }
+    });
+  };
+
+  const validater = async (name: string, pass: string) => {
+    if (!name) {
+      setError({
+        type: "name",
+        msg: "Please enter your name.",
+      });
+      return false;
+    }
+    if (name.length < 2) {
+      setError({
+        type: "name",
+        msg: "Please enter a valid name.",
+      });
+      return false;
+    }
+
+    if (!pass) {
+      setError({
+        type: "pass",
+        msg: "Please enter you password.",
+      });
+      return false;
+    }
+
+    if (!/^[0-9]*$/.test(pass) || pass.length < 10) {
+      setError({
+        type: "pass",
+        msg: "Invalid credentials, Try again.",
+      });
+      return false;
+    }
+
+    await checkCredentials(name, pass);
+    return true;
+  };
 
   const handleLogin = (n: string, pass: string) => {
-    setError(null);
-    return;
+    validater(n, pass);
   };
 
   return (
     <View style={s.container}>
       <Text style={s.text}>LOGIN </Text>
       <TextInput
-        style={s.input}
+        style={[
+          s.input,
+          {
+            borderBottomColor: err?.type === "name" ? "red" : "black",
+            borderBottomWidth: 2,
+          },
+        ]}
         value={name}
         placeholder={"Name"}
         placeholderTextColor="gray"
         onChangeText={(e) => onChangeName(e)}
       />
       <TextInput
-        style={s.input}
+        style={[
+          s.input,
+          {
+            borderBottomColor: err?.type === "pass" ? "red" : "black",
+            borderBottomWidth: 2,
+          },
+        ]}
         value={pass}
         placeholder={"Password"}
         placeholderTextColor="gray"
         onChangeText={(e) => onChangePass(e)}
       />
+      <Text
+        style={{
+          color: err?.msg ? "red" : "gray",
+          marginTop: 20,
+          marginBottom: -15,
+        }}
+      >
+        {err?.msg ?? "Password is your number for this assignment."}
+      </Text>
       <TouchableOpacity
         style={s.btn}
         activeOpacity={0.7}
@@ -40,7 +113,6 @@ export const Login = () => {
       >
         <Text style={s.textBtn}>Submit</Text>
       </TouchableOpacity>
-      <Text style={s.err}>{err}</Text>
     </View>
   );
 };

@@ -10,7 +10,7 @@
     "extra": {
       "SERVER": false,
       "LOCAL_URL": "http://192.168.1.13:4000",
-      "SERVER_URL": "https://lexa-apps.herokuapp.com"
+      "SERVER_URL": "https://TODO.herokuapp.com"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
