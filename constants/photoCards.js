@@ -1,28 +1,28 @@
 const photoCards = [
   {
+    id: "xva-asd",
     name: "One",
     photo: require("../assets/1.png"),
-    key: "1",
   },
   {
+    id: "xva-asdw",
     name: "Two",
     photo: require("../assets/2.png"),
-    key: "2",
   },
   {
+    id: "xva-asdaw",
     name: "Three",
     photo: require("../assets/3.png"),
-    key: "3",
   },
   {
+    id: "xva-sawdd",
     name: "Four",
     photo: require("../assets/4.png"),
-    key: "4",
   },
   {
+    id: "xva-awdsd",
     name: "Five",
     photo: require("../assets/5.png"),
-    key: "5",
   },
 ];
 

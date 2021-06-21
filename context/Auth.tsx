@@ -11,8 +11,7 @@ export interface USER {
   id: string;
   name: string;
   number: number;
-  selected: any[];
-  rejected: any[];
+  swiped: any[];
 }
 
 export const AuthContext = React.createContext({
@@ -23,8 +22,16 @@ export const AuthContext = React.createContext({
 });
 
 export const AuthContextProvider = ({ children }: any) => {
-  const [isAuth, setIsAuth] = React.useState(false);
-  const [authUser, setAuthUser] = React.useState<null | USER>(null);
+  const [isAuth, setIsAuth] = React.useState(true);
+  const [authUser, setAuthUser] = React.useState<null | USER>({
+    id: Math.random()
+      .toString(36)
+      .replace(/[^a-z]+/g, "")
+      .substr(2, 10),
+    name: "Joel",
+    number: 9893209958,
+    swiped: [],
+  });
 
   return (
     <AuthContext.Provider

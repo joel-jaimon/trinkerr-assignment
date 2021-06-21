@@ -1,4 +1,5 @@
 import { StackActions, useNavigation } from "@react-navigation/native";
+import axios from "axios";
 import * as React from "react";
 import {
   Text,
@@ -36,16 +37,22 @@ export const SignUp = () => {
     setError("OTP is Invalid.");
   };
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
+    const signup = axios.post("http://localhost:4000/register-user", {
+      data: {
+        name: name,
+        number: parseInt(number),
+        swiped: [],
+      },
+    });
+
+    const { data } = await signup;
+    console.log(data);
     setAuthUser({
-      id: Math.random()
-        .toString(36)
-        .replace(/[^a-z]+/g, "")
-        .substr(2, 10),
-      name: name,
-      number: parseInt(number),
-      selected: [],
-      rejected: [],
+      id: data.document._id,
+      name: data.document.name,
+      number: data.document.number,
+      swiped: data.document.swiped,
     });
     setIsAuth(true);
   };

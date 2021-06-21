@@ -1,3 +1,14 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 
-const styles = StyleSheet.create({});
+const { width, height } = Dimensions.get("window");
+
+export const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "black",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: height,
+    width: "100%",
+  },
+});
