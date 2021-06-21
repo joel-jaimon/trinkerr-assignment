@@ -17,6 +17,11 @@ import { Swipes } from "../Swipe/Swipes";
 import Card from "../Card/Card";
 import axios from "axios";
 
+import Constants from "expo-constants";
+const ENDPOINT = Constants.manifest.extra!.SERVER
+  ? Constants.manifest.extra!.SERVER_URL
+  : Constants.manifest.extra!.LOCAL_URL;
+
 const { height } = Dimensions.get("window");
 
 const Home = () => {
@@ -37,13 +42,11 @@ const Home = () => {
   const [swipedAll, setSwipedAll] = React.useState<null | string>(null);
 
   const handleCardTouchStart = () => {
-    console.log("TOUCHED START");
     setSwiping(true);
     setAutoSwipe(false);
   };
 
   const handleCardTouchEnd = () => {
-    console.log("TOUCHED END");
     setSwiping(false);
   };
 
@@ -66,7 +69,7 @@ const Home = () => {
 
   const handleDefaultSwipes = async (id: string, selectionState: string) => {
     await axios
-      .put(`http://192.168.1.13:4000/update-swiped/${authUser?.id}`, {
+      .put(`${ENDPOINT}/update-swiped/${authUser?.id}`, {
         data: {
           id,
           state: selectionState,

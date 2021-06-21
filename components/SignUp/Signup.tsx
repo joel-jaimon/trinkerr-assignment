@@ -11,6 +11,11 @@ import {
 import { AuthContext } from "../../context/Auth";
 import { styles as s } from "./signup.styles";
 
+import Constants from "expo-constants";
+const ENDPOINT = Constants.manifest.extra!.SERVER
+  ? Constants.manifest.extra!.SERVER_URL
+  : Constants.manifest.extra!.LOCAL_URL;
+
 export const SignUp = () => {
   const [number, onChangeNumber] = React.useState("");
   const [otp, onChangeOTP] = React.useState("");
@@ -43,9 +48,7 @@ export const SignUp = () => {
       return false;
     }
 
-    const { data } = await axios.get(
-      `http://192.168.1.13:4000/users/${number}`
-    );
+    const { data } = await axios.get(`${ENDPOINT}/users/${number}`);
 
     if (data[0]) {
       setError({
@@ -99,7 +102,7 @@ export const SignUp = () => {
 
   const handleSignup = async () => {
     if (validatorState2(name)) {
-      const signup = axios.post("http://192.168.1.13:4000/register-user", {
+      const signup = axios.post(`${ENDPOINT}/register-user`, {
         data: {
           name: name,
           number: parseInt(number),
@@ -108,7 +111,7 @@ export const SignUp = () => {
       });
 
       const { data } = await signup;
-      console.log(data);
+
       setAuthUser({
         id: data.document._id,
         name: data.document.name,

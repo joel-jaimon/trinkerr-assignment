@@ -9,6 +9,11 @@ import { HistoryCards } from "../HistoryCards/HistoryCards";
 //@ts-ignore
 const { __, height } = Dimensions.get("window");
 
+import Constants from "expo-constants";
+const ENDPOINT = Constants.manifest.extra!.SERVER
+  ? Constants.manifest.extra!.SERVER_URL
+  : Constants.manifest.extra!.LOCAL_URL;
+
 export const History = () => {
   const [data, setData] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
@@ -17,7 +22,7 @@ export const History = () => {
   React.useEffect(() => {
     (async () => {
       await axios
-        .get(`http://192.168.1.13:4000/users/${authUser?.number}`)
+        .get(`${ENDPOINT}/users/${authUser?.number}`)
         .then((e) => {
           setData(e.data[0]);
           setLoading(false);
@@ -31,12 +36,9 @@ export const History = () => {
 
   const updateArray = async (id: string, selectionState: string) => {
     await axios
-      .put(
-        `http://192.168.1.13:4000/users/${authUser?.id}/update-selection/${id}`,
-        {
-          data: selectionState,
-        }
-      )
+      .put(`${ENDPOINT}/users/${authUser?.id}/update-selection/${id}`, {
+        data: selectionState,
+      })
       .then((e) => {
         let oldData: any = data;
         let swiped = oldData.swiped;
@@ -56,8 +58,6 @@ export const History = () => {
   };
 
   const swiped = data?.swiped;
-
-  console.log(swiped);
 
   return (
     <View style={s.container}>

@@ -4,6 +4,11 @@ import { Text, View, TextInput, TouchableOpacity } from "react-native";
 import { AuthContext } from "../../context/Auth";
 import { styles as s } from "./login.styles";
 
+import Constants from "expo-constants";
+const ENDPOINT = Constants.manifest.extra!.SERVER
+  ? Constants.manifest.extra!.SERVER_URL
+  : Constants.manifest.extra!.LOCAL_URL;
+
 export const Login = () => {
   const [name, onChangeName] = React.useState("");
   const [pass, onChangePass] = React.useState("");
@@ -11,9 +16,8 @@ export const Login = () => {
   const [err, setError] = React.useState<any>(null);
 
   const checkCredentials = async (name: string, num: string) => {
-    await axios.get(`http://192.168.1.13:4000/users/${num}`).then((e) => {
+    await axios.get(`${ENDPOINT}/users/${num}`).then((e) => {
       try {
-        console.log(e.data);
         if (e.data[0].name === name) {
           setAuthUser(e.data[0]);
           setIsAuth(true);
