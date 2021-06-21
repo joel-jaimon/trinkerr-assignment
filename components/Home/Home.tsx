@@ -1,4 +1,8 @@
-import { StackActions, useNavigation } from "@react-navigation/native";
+import {
+  StackActions,
+  useIsFocused,
+  useNavigation,
+} from "@react-navigation/native";
 import * as React from "react";
 import {
   StyleSheet,
@@ -23,9 +27,11 @@ const Home = () => {
   const navigation = useNavigation();
   const pushAction = StackActions.push("History", {});
 
+  const isFocused = useIsFocused();
   const swiperRef = React.useRef(null);
   const [swiping, setSwiping] = React.useState(false);
   const [autoSwipe, setAutoSwipe] = React.useState(true);
+  const [swipedAll, setSwipedAll] = React.useState<null | string>(null);
 
   const handleCardTouchStart = () => {
     console.log("TOUCHED START");
@@ -71,14 +77,18 @@ const Home = () => {
 
   React.useEffect(() => {
     let interval = setInterval(autoSwipeLeft, 5000);
-    if (swiping) {
+    if (swiping || swipedAll || !isFocused) {
       clearInterval(interval);
     } else {
       clearInterval(interval);
       interval = setInterval(autoSwipeLeft, 5000);
     }
     return () => clearInterval(interval);
-  }, [swiping]);
+  }, [swiping, swipedAll, isFocused]);
+
+  const handleSwipedAll = () => {
+    setSwipedAll(`${authUser?.name}, you have rated all images. Thankyou!`);
+  };
 
   return (
     <View style={styles.container}>
@@ -95,6 +105,7 @@ const Home = () => {
         horizontalSwipe={true}
         infinite={false}
         stackSeparation={15}
+        onSwipedAll={handleSwipedAll}
       >
         <Card
           style={{
@@ -112,7 +123,7 @@ const Home = () => {
             backgroundColor: "black",
           }}
         >
-          {activity && (
+          {activity && !swipedAll && (
             <Text
               style={[
                 styles.text,
@@ -122,6 +133,24 @@ const Home = () => {
               ]}
             >
               {activity}
+            </Text>
+          )}
+          {swipedAll && (
+            <Text
+              style={[
+                {
+                  color: "white",
+                  textAlign: "center",
+                  padding: 20,
+                  marginTop: -100,
+                  marginBottom: 90,
+                  width: "80%",
+                  marginLeft: "10%",
+                  fontSize: 18,
+                },
+              ]}
+            >
+              {swipedAll}
             </Text>
           )}
           <TouchableOpacity

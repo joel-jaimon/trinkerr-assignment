@@ -34,7 +34,7 @@ export const Swipes = React.forwardRef((props: any, ref: any) => {
         stackSize={props.items.length < 3 ? props.items.length : 3}
         stackSeparation={props?.stackSeparation}
         infinite={props?.infinite ?? false}
-        onSwipedAll={() => console.log("Done Swiping")}
+        onSwipedAll={props?.onSwipedAll}
         showSecondCard
         animateOverlayLabelsOpacity
       />
