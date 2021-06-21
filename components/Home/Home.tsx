@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { photoCards as items } from "../../constants";
 import { AuthContext } from "../../context/Auth";
 import { Swipes } from "../Swipe/Swipes";
+import Card from "../Card/Card";
 import axios from "axios";
 
 const Home = () => {
@@ -80,7 +81,9 @@ const Home = () => {
         items={items}
         handleTouchStart={handleCardTouchStart}
         handleTouchEnd={handleCardTouchEnd}
-      />
+      >
+        <Card />
+      </Swipes>
       <View
         style={{
           height: 300,

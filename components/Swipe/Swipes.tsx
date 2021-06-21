@@ -1,6 +1,5 @@
 import * as React from "react";
 import { View } from "react-native";
-import Card from "../Card/Card";
 import Swiper from "react-native-deck-swiper";
 import styles from "./swipes.styles";
 
@@ -19,7 +18,7 @@ export const Swipes = React.forwardRef((props: any, ref: any) => {
             onTouchStart={props.handleTouchStart}
             onTouchEnd={props.handleTouchEnd}
           >
-            <Card card={card} />
+            {React.cloneElement(props.children, { card })}
           </View>
         )}
         cardIndex={0}
