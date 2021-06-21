@@ -1,11 +1,19 @@
 import { StackActions, useNavigation } from "@react-navigation/native";
 import * as React from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Dimensions,
+  Text,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import { photoCards as items } from "../../constants";
 import { AuthContext } from "../../context/Auth";
 import { Swipes } from "../Swipe/Swipes";
 import Card from "../Card/Card";
 import axios from "axios";
+
+const { height } = Dimensions.get("window");
 
 const Home = () => {
   const { authUser } = React.useContext(AuthContext);
@@ -75,14 +83,24 @@ const Home = () => {
   return (
     <View style={styles.container}>
       <Swipes
+        style={{
+          height: height * 0.7,
+        }}
         ref={swiperRef}
         onSwipedRight={handleRightSwipe}
         onSwipedLeft={handleLeftSwipe}
         items={items}
         handleTouchStart={handleCardTouchStart}
         handleTouchEnd={handleCardTouchEnd}
+        horizontalSwipe={true}
+        infinite={false}
+        stackSeparation={15}
       >
-        <Card />
+        <Card
+          style={{
+            height: height * 0.55,
+          }}
+        />
       </Swipes>
       <View
         style={{

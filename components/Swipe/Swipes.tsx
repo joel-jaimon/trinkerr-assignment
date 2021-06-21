@@ -1,17 +1,25 @@
 import * as React from "react";
 import { View } from "react-native";
 import Swiper from "react-native-deck-swiper";
-import styles from "./swipes.styles";
 
 export const Swipes = React.forwardRef((props: any, ref: any) => {
   return (
-    <View style={styles.swiperContainer}>
+    <View style={props.style}>
       <Swiper
         ref={ref}
-        onSwipedLeft={props.onSwipedLeft}
-        onSwipedRight={props.onSwipedRight}
-        verticalSwipe={false}
+        onSwipedTop={props?.onSwipedTop}
+        onSwipedBottom={props?.onSwipedBottom}
+        onSwipedLeft={props?.onSwipedLeft}
+        onSwipedRight={props?.onSwipedRight}
+        verticalSwipe={props?.verticalSwipe ?? false}
+        horizontalSwipe={props?.horizontalSwipe ?? false}
         animateCardOpacity
+        horizontalThreshold={100}
+        verticalThreshold={120}
+        disableBottomSwipe={true}
+        disableLeftSwipe={props.items.length < 2}
+        disableTopSwipe={false}
+        disableRightSwipe={props.items.length < 2}
         cards={props.items}
         renderCard={(card) => (
           <View
@@ -23,8 +31,9 @@ export const Swipes = React.forwardRef((props: any, ref: any) => {
         )}
         cardIndex={0}
         backgroundColor="black"
-        stackSize={3}
-        infinite
+        stackSize={props.items.length < 3 ? props.items.length : 3}
+        stackSeparation={props?.stackSeparation}
+        infinite={props?.infinite ?? false}
         onSwipedAll={() => console.log("Done Swiping")}
         showSecondCard
         animateOverlayLabelsOpacity

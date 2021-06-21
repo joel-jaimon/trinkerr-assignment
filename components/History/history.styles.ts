@@ -4,10 +4,7 @@ const { width, height } = Dimensions.get("window");
 
 export const styles = StyleSheet.create({
   container: {
-    backgroundColor: "black",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
+    height: "100%",
+    flex: 1,
   },
 });

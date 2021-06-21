@@ -1,23 +1,17 @@
 import * as React from "react";
-import {
-  ScrollView,
-  Text,
-  View,
-  Dimensions,
-  TouchableOpacity,
-  ImageBackground,
-} from "react-native";
+import { View, Dimensions, ActivityIndicator, Text } from "react-native";
 import { styles as s } from "./history.styles";
-import items from "../../constants/photoCards";
 import axios from "axios";
 import { AuthContext } from "../../context/Auth";
-import { LinearGradient } from "expo-linear-gradient";
+import { Swipes } from "../Swipe/Swipes";
+import { HistoryCards } from "../HistoryCards/HistoryCards";
 
 //@ts-ignore
 const { __, height } = Dimensions.get("window");
 
 export const History = () => {
   const [data, setData] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
   const { authUser } = React.useContext(AuthContext);
 
   React.useEffect(() => {
@@ -25,133 +19,85 @@ export const History = () => {
       .get(`http://192.168.1.13:4000/users/${authUser?.number}`)
       .then((e) => {
         setData(e.data[0]);
+        setLoading(false);
       });
   }, []);
 
-  const updateArray = async (id: string, state: string) => {
-    axios
+  //swiper hooks
+  const swiperRef = React.useRef(null);
+
+  const updateArray = async (id: string, selectionState: string) => {
+    await axios
       .put(
-        `http://192.168.1.13:4000/users/${authUser?.number}/update-selection/${id}`,
+        `http://192.168.1.13:4000/users/${authUser?.id}/update-selection/${id}`,
         {
-          data: state,
+          data: selectionState,
         }
       )
       .then((e) => {
-        setData(e.data[0]);
-      });
+        let oldData: any = data;
+        let swiped = oldData.swiped;
+        let obj = swiped.filter((e: any) => e.id === id)[0];
+        obj.state = selectionState;
+        oldData.swiped[swiped.indexOf(obj)] = obj;
+        setData(oldData);
+      })
+      .catch((e) => console.log(e));
   };
+
+  const handleLeftSwipe = (e: number) => {
+    updateArray(
+      data?.swiped[e].id,
+      data?.swiped[e].state === "rejected" ? "selected" : "rejected"
+    );
+  };
+
+  const swiped = data?.swiped;
 
   return (
     <View style={s.container}>
-      <ScrollView
-        snapToAlignment="end"
-        showsVerticalScrollIndicator={true}
-        style={{
-          width: "100%",
-        }}
-      >
-        {data?.swiped?.map((e) => {
-          return (
-            <LinearGradient
-              // Button Linear Gradient
-              key={e.id}
+      {!loading ? (
+        swiped[0] ? (
+          <Swipes
+            style={{
+              height: height,
+            }}
+            ref={swiperRef}
+            verticalSwipe={true}
+            onSwipedTop={handleLeftSwipe}
+            items={swiped}
+            infinite={true}
+            stackSeparation={25}
+            horizontalSwipe={true}
+          >
+            <HistoryCards
               style={{
-                margin: 15,
-                padding: 2,
-                marginBottom: 20,
-                borderRadius: 5,
+                height: height * 0.7,
               }}
-              colors={["rgb(0,0,0)", "#8A2BE2"]}
+            />
+          </Swipes>
+        ) : (
+          <View
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "black",
+              height: height,
+            }}
+          >
+            <Text
+              style={{
+                color: "white",
+              }}
             >
-              <ImageBackground
-                source={items.filter((b) => b.id === e.id)[0].photo}
-                style={{
-                  height: 500,
-                  backgroundColor: "white",
-                  display: "flex",
-                  borderRadius: 5,
-                  justifyContent: "flex-end",
-                }}
-              >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: e?.state === "rejected" ? "red" : "green",
-                    fontSize: 35,
-                    fontWeight: "700",
-                    padding: 25,
-                  }}
-                >
-                  {e.state.toUpperCase()}
-                </Text>
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text
-                    style={{
-                      backgroundColor: "#8A2BE2",
-                      padding: 5,
-                      color: "white",
-                    }}
-                  >
-                    <Text
-                      style={[
-                        {
-                          fontWeight: "700",
-                        },
-                      ]}
-                    >
-                      Date:
-                    </Text>{" "}
-                    {`${new Date(e.timestamp).toString().slice(4, 15)} `}
-                  </Text>
-                  <Text
-                    style={{
-                      backgroundColor: "#8A2BE2",
-                      padding: 5,
-                      color: "white",
-                    }}
-                  >
-                    <Text
-                      style={[
-                        {
-                          fontWeight: "700",
-                        },
-                      ]}
-                    >
-                      Time:
-                    </Text>{" "}
-                    {`${new Date(e.timestamp).toString().slice(16, 21)}  `}
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "rgb(21,21,21)",
-                  }}
-                  activeOpacity={0.9}
-                >
-                  <Text
-                    style={{
-                      color: "white",
-                      fontWeight: "600",
-                      padding: 15,
-                      textAlign: "center",
-                    }}
-                  >
-                    Add to {e.state === "rejected" ? "selected" : "rejected"}{" "}
-                    list.{" "}
-                  </Text>
-                </TouchableOpacity>
-              </ImageBackground>
-            </LinearGradient>
-          );
-        })}
-      </ScrollView>
+              You have not selected / rejected anything.
+            </Text>
+          </View>
+        )
+      ) : (
+        <ActivityIndicator color={"blue"} size="large" />
+      )}
     </View>
   );
 };
