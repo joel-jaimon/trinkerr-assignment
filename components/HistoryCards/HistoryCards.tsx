@@ -36,14 +36,6 @@ export const HistoryCards = ({ card, style }: any) => {
             fontSize: 35,
             fontWeight: "700",
             padding: 25,
-            shadowColor: "black",
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowRadius: 6,
-            shadowOpacity: 0.3,
-            elevation: 2,
           }}
         >
           {card.state.toUpperCase()}

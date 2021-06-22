@@ -19,7 +19,12 @@ export const Login = () => {
     await axios.get(`${ENDPOINT}/users/${num}`).then((e) => {
       try {
         if (e.data[0].name === name) {
-          setAuthUser(e.data[0]);
+          setAuthUser({
+            id: e.data[0]._id,
+            name: e.data[0].name,
+            number: e.data[0].number,
+            swiped: e.data[0].swiped,
+          });
           setIsAuth(true);
         }
       } catch {

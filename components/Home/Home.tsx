@@ -100,7 +100,7 @@ const Home = () => {
     <View style={styles.container}>
       <Swipes
         style={{
-          height: height * 0.7,
+          height: height - 250,
         }}
         ref={swiperRef}
         onSwipedRight={handleRightSwipe}
@@ -115,7 +115,7 @@ const Home = () => {
       >
         <Card
           style={{
-            height: height * 0.55,
+            height: height - 360,
           }}
         />
       </Swipes>
