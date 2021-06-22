@@ -10,6 +10,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { photoCards as items } from "../../constants";
 import { AuthContext } from "../../context/Auth";
@@ -25,6 +26,7 @@ const ENDPOINT = Constants.manifest.extra!.SERVER
 const { height } = Dimensions.get("window");
 
 const Home = () => {
+  const [availableCard, setAvailableCards] = React.useState<null | any[]>(null);
   const { authUser } = React.useContext(AuthContext);
   const [activity, setActivity] = React.useState<null | string>();
 
@@ -82,43 +84,78 @@ const Home = () => {
   };
 
   React.useEffect(() => {
-    let interval = setInterval(autoSwipeLeft, 5000);
-    if (swiping || swipedAll || !isFocused) {
-      clearInterval(interval);
-    } else {
-      clearInterval(interval);
-      interval = setInterval(autoSwipeLeft, 5000);
+    if (availableCard) {
+      let interval = setInterval(autoSwipeLeft, 5000);
+      if (swiping || swipedAll || !isFocused) {
+        clearInterval(interval);
+      } else {
+        clearInterval(interval);
+        interval = setInterval(autoSwipeLeft, 5000);
+      }
+      return () => clearInterval(interval);
     }
-    return () => clearInterval(interval);
-  }, [swiping, swipedAll, isFocused]);
+  }, [swiping, swipedAll, isFocused, availableCard]);
 
   const handleSwipedAll = () => {
     setSwipedAll(`${authUser?.name}, you have rated all images. Thankyou!`);
   };
 
+  React.useEffect(() => {
+    const remainingItems = items.filter((newObj) => {
+      let bool = true;
+
+      for (let i = 0; i < authUser?.swiped?.length; i++) {
+        if (newObj.id === authUser?.swiped[i]?.id) {
+          bool = false;
+          break;
+        }
+      }
+      return bool;
+    });
+    setAvailableCards(remainingItems);
+
+    if (remainingItems && remainingItems?.length === 0) {
+      handleSwipedAll();
+    }
+  }, []);
+
   return (
     <View style={styles.container}>
-      <Swipes
-        style={{
-          height: height - 250,
-        }}
-        ref={swiperRef}
-        onSwipedRight={handleRightSwipe}
-        onSwipedLeft={handleLeftSwipe}
-        items={items}
-        handleTouchStart={handleCardTouchStart}
-        handleTouchEnd={handleCardTouchEnd}
-        horizontalSwipe={true}
-        infinite={false}
-        stackSeparation={15}
-        onSwipedAll={handleSwipedAll}
-      >
-        <Card
+      {availableCard ? (
+        <Swipes
           style={{
-            height: height - 360,
+            height: height - 250,
           }}
-        />
-      </Swipes>
+          ref={swiperRef}
+          onSwipedRight={handleRightSwipe}
+          onSwipedLeft={handleLeftSwipe}
+          items={availableCard}
+          handleTouchStart={handleCardTouchStart}
+          handleTouchEnd={handleCardTouchEnd}
+          horizontalSwipe={true}
+          infinite={false}
+          stackSeparation={15}
+          onSwipedAll={handleSwipedAll}
+        >
+          <Card
+            style={{
+              height: height - 360,
+            }}
+          />
+        </Swipes>
+      ) : (
+        <View
+          style={{
+            height: height - 250,
+            backgroundColor: "black",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <ActivityIndicator size="large" color="#8A2BE2" />
+        </View>
+      )}
+
       <View
         style={{
           height: 300,
