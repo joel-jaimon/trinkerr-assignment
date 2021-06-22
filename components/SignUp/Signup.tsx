@@ -1,4 +1,8 @@
-import { StackActions, useNavigation } from "@react-navigation/native";
+import {
+  StackActions,
+  useIsFocused,
+  useNavigation,
+} from "@react-navigation/native";
 import axios from "axios";
 import * as React from "react";
 import {
@@ -23,6 +27,12 @@ export const SignUp = () => {
 
   const { setAuthUser, setIsAuth } = React.useContext(AuthContext);
   const [state, setState] = React.useState(0);
+
+  const isFocused = useIsFocused();
+
+  React.useEffect(() => {
+    setError(null);
+  }, [isFocused]);
 
   React.useEffect(() => {
     setState(1);

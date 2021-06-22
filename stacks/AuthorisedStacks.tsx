@@ -18,6 +18,9 @@ export const AuthorisedStack = () => {
     },
     headerTintColor: "white",
     headerTitleAlign: "center",
+    headerTitleStyle: {
+      color: "white",
+    },
   };
   return (
     <NavigationContainer>
